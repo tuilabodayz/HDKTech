@@ -1,79 +1,504 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - HDKTech</title>
-    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="/HDKTech.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-bold" href="/Home/Index" style="font-size: 1.8rem; letter-spacing: -1px;">
-                    <span class="text-light">HDK</span><span class="text-danger">Tech</span>
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarColor02">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active" asp-controller="Home" asp-action="Index">
-                               </i>Trang Chủ</a>
-                           
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" asp-controller="Home" asp-action="About">
-                              </i> Về Chúng Tôi
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" asp-controller="Home" asp-action="Hotline">
-                                <i class="bi bi-headphones me-1"></i> Hotline
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">Riêng Tư</a>
-                        </li>
-                        @*  <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Separated link</a>
-                            </div>
-                        </li>  *@
-                    </ul>
-                    @* <form class="d-flex">
-                        <input class="form-control me-sm-2" type="search" placeholder="Search">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                    </form> *@
-                    <partial name ="_LoginPartial" />
+<body style="background-color: #f5f5f5;">
+
+    <!-- ╔════════════════════════════════════════════════════════════════╗ -->
+    <!-- ║ HEADER TIER 1: Logo | Nav | Hotline | Auth | Cart            ║ -->
+    <!-- ║ Color: #1a1a1a (Deep Black)                                   ║ -->
+    <!-- ╚════════════════════════════════════════════════════════════════╝ -->
+    <header class="hdk-tier1-header sticky-top">
+        <div class="container-fluid">
+            <!-- PERFECT HORIZONTAL ALIGNMENT - Pure Flexbox Layout -->
+            <div class="hdk-tier1-content d-flex align-items-center justify-content-between px-3 py-3 gap-3">
+
+                <!-- ═══ LEFT SECTION: Logo + Nav Links ═══ -->
+                <div class="hdk-tier1-left d-flex align-items-center gap-4 flex-shrink-0">
+
+                    <!-- LOGO -->
+                    <a asp-controller="Home" asp-action="Index" class="text-decoration-none d-flex align-items-center">
+                        <div class="hdk-logo">
+                            <span class="hdk-logo-hdk">HDK</span><span class="hdk-logo-tech">Tech</span>
+                        </div>
+                    </a>
+
+                    <!-- NAVIGATION LINKS (Desktop only) -->
+                    <div class="hdk-nav-links d-none d-lg-flex gap-4 align-items-center ms-2">
+                        <a asp-controller="Home" asp-action="About" title="Về chúng tôi" class="nav-link-item">Về chúng tôi</a>
+                        <a asp-controller="Home" asp-action="Privacy" title="Chính sách" class="nav-link-item">Chính sách</a>
+                        <a asp-controller="Home" asp-action="Hotline" title="Liên hệ" class="nav-link-item">Liên hệ</a>
+                    </div>
+                </div>
+
+                <!-- ═══ RIGHT SECTION: Hotline + Auth + Cart ═══ -->
+                <div class="hdk-tier1-right d-flex align-items-center gap-3 flex-shrink-0">
+
+                    <!-- HOTLINE BUTTON -->
+                    <a href="tel:1900123456" class="hdk-hotline-btn d-none d-lg-inline-flex align-items-center flex-shrink-0">
+                        <i class="bi bi-telephone-fill"></i>
+                        <span class="ms-2 fw-bold">1900.123.456</span>
+                    </a>
+
+                    <!-- AUTH LINKS -->
+                    <div class="hdk-auth-links d-none d-lg-flex gap-0 align-items-center flex-shrink-0">
+                        <partial name="_LoginPartial" />
+                    </div>
+
+                    <!-- CART ICON -->
+                    <a asp-controller="Cart" asp-action="Index" class="hdk-cart-container d-inline-flex align-items-center justify-content-center position-relative flex-shrink-0">
+                        <i class="bi bi-bag-fill hdk-cart-icon"></i>
+                        <span id="cartBadge" class="hdk-cart-badge">0</span>
+                    </a>
+
+                    <!-- MOBILE MENU TOGGLE -->
+                    <button class="btn btn-link d-lg-none text-white p-0 flex-shrink-0" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu" aria-expanded="false">
+                        <i class="bi bi-list fs-5"></i>
+                    </button>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
+            <!-- MOBILE MENU (Collapsed) -->
+            <div class="collapse d-lg-none" id="mobileMenu">
+                <div class="pb-3 border-top border-dark-subtle">
+                    <a asp-controller="Home" asp-action="About" class="d-block text-white text-decoration-none small py-2">Về chúng tôi</a>
+                    <a asp-controller="Home" asp-action="Privacy" class="d-block text-white text-decoration-none small py-2">Chính sách</a>
+                    <a asp-controller="Home" asp-action="Hotline" class="d-block text-white text-decoration-none small py-2">Liên hệ</a>
+                    <a href="tel:1900123456" class="d-block hdk-hotline-btn mt-3 justify-content-center w-100">
+                        <i class="bi bi-telephone-fill"></i> 1900.123.456
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ╔════════════════════════════════════════════════════════════════╗ -->
+    <!-- ║ HEADER TIER 2: Category Menu | Search Bar                     ║ -->
+    <!-- ║ Color: #252525 (Dark Gray)                                    ║ -->
+    <!-- ╚════════════════════════════════════════════════════════════════╝ -->
+    <header class="hdk-tier2-header sticky-top" style="top: 73px;">
+        <div class="container-fluid">
+            <div class="row align-items-center px-3 py-3 gx-3">
+
+                <!-- ═══ CATEGORY MENU BUTTON ═══ -->
+                <div class="col-auto">
+                    <div class="dropdown">
+                        <button class="hdk-category-btn dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-list"></i>
+                            <span class="ms-2 d-none d-md-inline">DANH MỤC</span>
+                            <i class="bi bi-chevron-down ms-2 d-none d-md-inline"></i>
+                        </button>
+                        <div class="dropdown-menu hdk-dropdown-menu" aria-labelledby="categoryDropdown">
+                            @await Component.InvokeAsync("Categories")
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ SEARCH BAR ═══ -->
+                <div class="col">
+                    <form asp-controller="Product" asp-action="Search" method="get" class="w-100">
+                        <div class="hdk-search-container">
+                            <input type="text" 
+                                   class="hdk-search-input" 
+                                   name="keyword" 
+                                   placeholder="Tìm laptop, linh kiện, phụ kiện..."
+                                   aria-label="Tìm kiếm sản phẩm">
+                            <button type="submit" class="hdk-search-btn" title="Tìm kiếm">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═════════════════════════════════════════════════════════════════ -->
+    <!-- Toast Container (Notifications) -->
+    <!-- ═════════════════════════════════════════════════════════════════ -->
+    <div id="toastContainer" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1040;"></div>
+
+    <!-- ═════════════════════════════════════════════════════════════════ -->
+    <!-- MAIN CONTENT AREA -->
+    <!-- ═════════════════════════════════════════════════════════════════ -->
+    <main class="content-wrapper" style="margin-top: 0; padding: 0;">
+        <div class="container-fluid" style="padding: 0;">
+            <div class="row" style="margin: 0;">
+                <div class="col-12" style="padding: 0;">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ═════════════════════════════════════════════════════════════════ -->
+    <!-- FOOTER - PROFESSIONAL DARK DESIGN -->
+    <!-- ═════════════════════════════════════════════════════════════════ -->
+    <footer class="hdk-footer-pro">
+        <style>
+            :root {
+                --hdk-red: #ef4444;
+                --hdk-dark: #212529;
+                --hdk-footer-bg: #1a1a1a;
+                --hdk-footer-text: #e5e7eb;
+            }
+
+            .hdk-footer-pro {
+                background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+                color: var(--hdk-footer-text);
+                padding: 40px 0 15px;
+                margin-top: 60px;
+                border-top: 1px solid rgba(239, 68, 68, 0.2);
+            }
+
+            .footer-content {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 30px;
+                margin-bottom: 30px;
+            }
+
+            /* Column 1: Brand Section */
+            .footer-brand {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .footer-brand-logo {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 1.3rem;
+                font-weight: 700;
+                margin-bottom: 6px;
+            }
+
+            .footer-brand-logo span:first-child {
+                color: white;
+            }
+
+            .footer-brand-logo span:last-child {
+                color: var(--hdk-red);
+            }
+
+            .footer-brand-bio {
+                font-size: 0.85rem;
+                line-height: 1.5;
+                color: #a0aec0;
+            }
+
+            .footer-social-icons {
+                display: flex;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .footer-social-link {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: var(--hdk-red);
+                color: white;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                font-size: 1rem;
+            }
+
+            .footer-social-link:hover {
+                background: #dc2626;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 12px rgba(239, 68, 68, 0.4);
+            }
+
+            /* Column Headers */
+            .footer-column h5 {
+                font-size: 0.9rem;
+                font-weight: 700;
+                color: white;
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+                border-bottom: 2px solid var(--hdk-red);
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+            }
+
+            .footer-column-link {
+                display: block;
+                color: #a0aec0;
+                text-decoration: none;
+                padding: 6px 0;
+                transition: all 0.3s ease;
+                font-size: 0.85rem;
+            }
+
+            .footer-column-link:hover {
+                color: var(--hdk-red);
+                padding-left: 6px;
+            }
+
+            /* Column 2: About */
+            .footer-about {}
+
+            /* Column 3: Support */
+            .footer-support {}
+
+            /* Column 4: Contact */
+            .footer-contact {}
+
+            .footer-contact-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                margin-bottom: 10px;
+                padding: 8px;
+                background: rgba(255, 255, 255, 0.03);
+                border-radius: 6px;
+                transition: all 0.3s ease;
+            }
+
+            .footer-contact-item:hover {
+                background: rgba(239, 68, 68, 0.1);
+                border-left: 3px solid var(--hdk-red);
+                padding-left: 11px;
+            }
+
+            .footer-contact-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 28px;
+                height: 28px;
+                min-width: 28px;
+                background: var(--hdk-red);
+                color: white;
+                border-radius: 5px;
+                font-size: 0.8rem;
+            }
+
+            .footer-contact-info {
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
+            }
+
+            .footer-contact-label {
+                font-size: 0.7rem;
+                color: #818cf8;
+                text-transform: uppercase;
+                letter-spacing: 0.2px;
+                font-weight: 600;
+            }
+
+            .footer-contact-value {
+                font-size: 0.8rem;
+                color: var(--hdk-footer-text);
+                word-break: break-word;
+                line-height: 1.3;
+            }
+
+            .footer-contact-value a {
+                color: var(--hdk-red);
+                text-decoration: none;
+                transition: all 0.3s ease;
+            }
+
+            .footer-contact-value a:hover {
+                text-decoration: underline;
+            }
+
+            /* Bottom Footer */
+            .footer-bottom {
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                padding-top: 15px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .footer-copyright {
+                font-size: 0.8rem;
+                color: #718096;
+            }
+
+            .footer-copyright a {
+                color: var(--hdk-red);
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+            .footer-copyright a:hover {
+                color: #dc2626;
+            }
+
+            .footer-credit {
+                font-size: 0.75rem;
+                color: #4b5563;
+            }
+
+            /* Responsive Design */
+            @@media (max-width: 1199px) {
+                .footer-content {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 25px;
+                }
+            }
+
+            @@media (max-width: 991px) {
+                .hdk-footer-pro {
+                    padding: 30px 0 12px;
+                    margin-top: 50px;
+                }
+
+                .footer-content {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 20px;
+                }
+
+                .footer-social-icons {
+                    justify-content: flex-start;
+                }
+            }
+
+            @@media (max-width: 576px) {
+                .hdk-footer-pro {
+                    padding: 25px 0 12px;
+                    margin-top: 30px;
+                }
+
+                .footer-content {
+                    grid-template-columns: 1fr;
+                    gap: 18px;
+                }
+
+                .footer-brand-bio {
+                    max-width: 100%;
+                }
+
+                .footer-column h5 {
+                    font-size: 0.85rem;
+                    margin-bottom: 10px;
+                }
+
+                .footer-bottom {
+                    gap: 6px;
+                }
+
+                .footer-copyright,
+                .footer-credit {
+                    font-size: 0.75rem;
+                }
+            }
+        </style>
+
         <div class="container">
-            &copy; 2026 - HDKTech - <a asp-area="" asp-controller="Home" asp-action="Privacy">Chính sách bảo mật</a>
+            <div class="footer-content">
+                <!-- Column 1: Brand & Social -->
+                <div class="footer-brand">
+                    <div class="footer-brand-logo">
+                        <span>HDK</span><span>Tech</span>
+                    </div>
+                    <p class="footer-brand-bio">
+                        Chuyên cung cấp laptop, linh kiện máy tính chính hãng với giá tốt nhất thị trường.
+                    </p>
+                    <div class="footer-social-icons">
+                        <a href="https://www.facebook.com/hdktech" target="_blank" rel="noopener" title="Facebook" class="footer-social-link">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="https://www.instagram.com/hdktech" target="_blank" rel="noopener" title="Instagram" class="footer-social-link">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <a href="https://www.youtube.com/hdktech" target="_blank" rel="noopener" title="YouTube" class="footer-social-link">
+                            <i class="bi bi-youtube"></i>
+                        </a>
+                        <a href="https://zalo.me/0901234567" target="_blank" rel="noopener" title="Zalo" class="footer-social-link">
+                            <i class="bi bi-chat-dots"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Column 2: About -->
+                <div class="footer-column footer-about">
+                    <h5>Về chúng tôi</h5>
+                    <a asp-controller="Home" asp-action="About" class="footer-column-link">Giới thiệu công ty</a>
+                    <a asp-controller="Home" asp-action="Privacy" class="footer-column-link">Tin tức</a>
+                    <a href="#" class="footer-column-link">Tuyển dụng</a>
+                    <a asp-controller="Home" asp-action="Hotline" class="footer-column-link">Liên hệ</a>
+                </div>
+
+                <!-- Column 3: Support -->
+                <div class="footer-column footer-support">
+                    <h5>Hỗ trợ khách hàng</h5>
+                    <a asp-controller="Home" asp-action="Privacy" class="footer-column-link">Chính sách bảo hành</a>
+                    <a asp-controller="Home" asp-action="Privacy" class="footer-column-link">Chính sách đổi trả</a>
+                    <a asp-controller="Home" asp-action="Privacy" class="footer-column-link">Hướng dẫn mua hàng</a>
+                    <a asp-controller="Home" asp-action="Privacy" class="footer-column-link">Phương thức thanh toán</a>
+                </div>
+
+                <!-- Column 4: Contact Info -->
+                <div class="footer-column footer-contact">
+                    <h5>Liên hệ</h5>
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-icon">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        <div class="footer-contact-info">
+                            <span class="footer-contact-label">Địa chỉ</span>
+                            <span class="footer-contact-value">123 Đường ABC, Quận 1, TP.HCM</span>
+                        </div>
+                    </div>
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-icon">
+                            <i class="bi bi-telephone"></i>
+                        </div>
+                        <div class="footer-contact-info">
+                            <span class="footer-contact-label">Hotline</span>
+                            <span class="footer-contact-value"><a href="tel:1900123456">1900.123.456</a></span>
+                        </div>
+                    </div>
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-icon">
+                            <i class="bi bi-envelope"></i>
+                        </div>
+                        <div class="footer-contact-info">
+                            <span class="footer-contact-label">Email</span>
+                            <span class="footer-contact-value"><a href="mailto:support@hdktech.vn">support@hdktech.vn</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Footer -->
+            <div class="footer-bottom">
+                <p class="footer-copyright">
+                    &copy; 2026 <a asp-controller="Home" asp-action="Index">HDKTech</a>. Tất cả các quyền được bảo lưu.
+                </p>
+                <p class="footer-credit">
+                    Powered by HDKTech | Thiết kế & Phát triển bởi <a href="#" style="color: var(--hdk-red); text-decoration: none;">HDKTech Team</a>
+                </p>
+            </div>
         </div>
     </footer>
+
+    <!-- ═════════════════════════════════════════════════════════════════ -->
+    <!-- JavaScript Libraries -->
+    <!-- ═════════════════════════════════════════════════════════════════ -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/image-fallback.js"></script>
+    <script src="~/js/cart.js"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

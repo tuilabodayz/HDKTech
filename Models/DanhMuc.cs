@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HDKTech.Models
@@ -11,6 +11,8 @@ namespace HDKTech.Models
         [Required(ErrorMessage = "Ten danh muc khong the null")]
         [StringLength(100)]
         public string TenDanhMuc { get; set; }
+        public string? MoTaDanhMuc { get; set; }
+        public string? BannerImageUrl { get; set; }
         public int? MaDanhMucCha { get; set; }
 
         public virtual ICollection<SanPham> SanPhams { get; set; }

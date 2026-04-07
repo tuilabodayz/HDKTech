@@ -92,7 +92,7 @@ namespace HDKTech.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-                user.HoTen = Input.HoTen;
+                user.HoTen = Input.HoTen;   
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
