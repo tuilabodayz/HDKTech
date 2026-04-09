@@ -1,96 +1,314 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model HDKTech.Models.HomeIndexViewModel
+@using HDKTech.Utils
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Env
+@{
+    ViewData["Title"] = "Trang Chủ - HDKTech - Cửa Hàng Máy Tính Hàng Đầu";
 }
 
-<div class="text-center mt-3">
-    <h1 class="display-5 fw-bold text-uppercase">HDKTech - Linh Kiện Máy Tính & Laptop</h1>
-</div>
+<link rel="stylesheet" href="~/css/pages/home.css" />
 
-<div class="container my-4">
-    <div class="bg-light p-3 rounded-3 shadow-sm mb-4">
-        <form asp-action="Index" class="row g-3 align-items-center">
-            <div class="col-lg-6 col-md-5">
-                <div class="input-group">
-                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                    <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Bạn cần tìm gì?">
-                </div>
-            </div>
-
-            <div class="col-lg-4 col-md-5">
-                <select class="form-select" id="inlineFormSelectPref">
-                    <option selected>Tất cả danh mục</option>
-                    <option value="1">Laptop</option>
-                    <option value="2">Laptop Gaming</option>
-                    <option value="3">Main, CPU, VGA</option>
-                    <option value="4">Case, Nguồn, Tản</option>
-                    <option value="5">Ổ cứng, RAM, Thẻ nhớ</option>
-                    <option value="6">Loa, Micro, Webcam</option>
-                    <option value="7">Màn hình</option>
-                    <option value="8">Bàn phím</option>
-                    <option value="9">Chuột, Lót chuột</option>
-                    <option value="10">Tai nghe</option>
-                    <option value="11">Ghế - Bàn</option>
-                    <option value="12">Phần mềm, mạng</option>
-                    <option value="13">Handheld, Console</option>
-                    <option value="14">Phụ kiện (Hub, sạc, cáp, ..)</option>
-                    <option value="15">Dịch vụ và thông tin khác</option>
-                </select>
-            </div>
-
-            <div class="col-lg-2 col-md-2">
-                <button type="submit" class="btn btn-danger w-100 fw-bold">TÌM KIẾM</button>
-            </div>
-        </form>
-    </div>
-
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-        @for (int i = 1; i <= 8; i++)
+<!-- ============================================
+     1. CATEGORY-BASED HERO BANNER CAROUSEL
+     ============================================ -->
+<div id="categoryBannerCarousel" class="carousel slide carousel-fade banner-carousel" data-bs-ride="carousel" data-bs-interval="4000">
+    <div class="carousel-indicators banner-indicators">
+        @for (int i = 0; i < Model.Categories.Count; i++)
         {
-            <div class="col">
-                <div class="card h-100 border-0 shadow-sm product-card">
-                    <div class="position-relative">
-                        <img src="https://product.hstatic.net/200000722513/product/ava_77563131fc2b48acb9a41ec545d9ed7d_master.png"
-                             class="card-img-top p-3" alt="Sản phẩm">
-                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">-10%</span>
-                    </div>
+            <button type="button"
+                    data-bs-target="#categoryBannerCarousel"
+                    data-bs-slide-to="@i"
+                    class="@(i == 0 ? "active" : "")"
+                    aria-current="@(i == 0 ? "true" : "false")"
+                    aria-label="Slide @(i + 1)"></button>
+        }
+    </div>
 
-                    <div class="card-body d-flex flex-column">
-                        <h6 class="card-title fw-bold text-truncate-2" style="height: 45px;">Laptop Acer Swift X14 SFX14 72G 77F9 - Ultra 7</h6>
+    <div class="carousel-inner">
+        @for (int i = 0; i < Model.Categories.Count; i++)
+        {
+            var category = Model.Categories[i];
+            var colors = new[] { "#1e3c72", "#2a5298", "#0f3460", "#16213e", "#0b132b" };
+            var bgColor = colors[i % colors.Length];
+            
+            var bannerFileName = "category-" + category.MaDanhMuc + ".jpg";
+            var bannerPhysicalPath = System.IO.Path.Combine(Env.WebRootPath ?? "", "images", "banners", bannerFileName);
+            var hasBanner = System.IO.File.Exists(bannerPhysicalPath);
+            var bannerImg = hasBanner ? Url.Content("~/images/banners/" + bannerFileName) : null;
+            
+            var bgStyle = hasBanner
+                ? $"background-image: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%), url('{bannerImg}');"
+                : $"background-color: {bgColor}; background-image: linear-gradient(135deg, {bgColor} 0%, rgba(0,0,0,0.7) 100%);";
 
-                        <div class="mb-2">
-                            <span class="text-warning small"><i class="bi bi-star-fill"></i> 5.0</span>
-                            <span class="text-muted small">(12 đánh giá)</span>
-                        </div>
-
-                        <div class="mt-auto">
-                            <p class="text-decoration-line-through text-muted small mb-0">38.990.000₫</p>
-                            <p class="fs-5 fw-bold text-danger mb-3">35.490.000₫</p>
-                            <button class="btn btn-outline-primary w-100 btn-sm fw-bold">
-                                <i class="bi bi-cart3"></i> THÊM GIỎ HÀNG
-                            </button>
-                        </div>
+            <div class="carousel-item banner-item @(i == 0 ? "active" : "")">
+                <div class="banner-background" style="@bgStyle background-size: cover; background-position: center;"></div>
+                <div class="banner-overlay"></div>
+                <div class="banner-content container">
+                    <div class="banner-text d-flex flex-column align-items-center justify-content-center text-center w-100">
+                        <h1 class="banner-title display-4 fw-bold text-white mb-3">@category.TenDanhMuc.ToUpper()</h1>
+                        
+                        <p class="banner-subtitle fs-5 mb-2 text-info uppercase shadow-sm">NÂNG TẦM TRẢI NGHIỆM SỐ</p>
+                        
+                        @if (!string.IsNullOrWhiteSpace(category.MoTaDanhMuc))
+                        {
+                            <p class="banner-description lead text-white-50 mb-4" style="max-width: 750px;">
+                                @category.MoTaDanhMuc
+                            </p>
+                        }
+                        
+                        <a asp-controller="Category" asp-action="Index" asp-route-id="@category.MaDanhMuc" class="banner-btn btn btn-danger btn-lg rounded-pill px-5 shadow-lg">
+                            <i class="bi bi-lightning-charge-fill me-2"></i> KHÁM PHÁ NGAY
+                        </a>
                     </div>
                 </div>
             </div>
         }
     </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#categoryBannerCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#categoryBannerCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
 </div>
 
-<style>
-    .product-card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        cursor: pointer;
-    }
+<!-- ============================================
+     2. PROMO FEATURES (Backdrop Blur)
+     ============================================ -->
+<section class="service-highlights py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-6 col-md-3">
+                <div class="service-item blurred">
+                    <div class="service-icon gradient-center">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <h5 class="service-title">Giao Hàng Nhanh</h5>
+                    <p class="service-desc">Giao trong 24-48h nội thành</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="service-item blurred">
+                    <div class="service-icon gradient-center">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h5 class="service-title">Bảo Hành Chính Hãng</h5>
+                    <p class="service-desc">24 tháng cho nhiều sản phẩm</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="service-item blurred">
+                    <div class="service-icon gradient-center">
+                        <i class="bi bi-credit-card"></i>
+                    </div>
+                    <h5 class="service-title">Trả Góp 0%</h5>
+                    <p class="service-desc">Linh hoạt lên đến 12 tháng</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="service-item blurred">
+                    <div class="service-icon gradient-center">
+                        <i class="bi bi-headset"></i>
+                    </div>
+                    <h5 class="service-title">Hỗ Trợ 24/7</h5>
+                    <p class="service-desc">Tư vấn mọi lúc</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+<!-- ============================================
+     3. FEATURED CATEGORIES (Grid Layout)
+     ============================================ -->
+<section class="featured-categories py-5">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-title"><i class="bi bi-grid-3x2"></i> DANH MỤC NỔI BẬT</div>
+        </div>
+
+        <div class="categories-grid">
+            @if (Model.Categories.Any())
+            {
+                @foreach (var category in Model.Categories.Take(8))
+                {
+                    var catProduct = Model.AllProducts?.FirstOrDefault(p => p.MaDanhMuc == category.MaDanhMuc);
+                    var catDefaultImage = catProduct?.HinhAnhs?.FirstOrDefault(h => h.IsDefault);
+                    var catAnyImage = catProduct?.HinhAnhs?.FirstOrDefault();
+                    var catImg = catDefaultImage?.Url ?? catAnyImage?.Url ?? "no-image.png";
+                    var imgUrl = Url.Content("/images/products/" + catImg);
+
+                    <a asp-controller="Category" asp-action="Index" asp-route-id="@category.MaDanhMuc" class="category-tile">
+                        <div class="category-tile-image">
+                            <img src="@imgUrl" alt="@category.TenDanhMuc" onerror="this.src='/images/products/no-image.png'" />
+                            <div class="category-tile-overlay">
+                                <h5 class="category-tile-name">@category.TenDanhMuc</h5>
+                                <span class="category-tile-arrow"><i class="bi bi-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     4. FEATURED PRODUCTS & NEW ARRIVALS
+     ============================================ -->
+<section class="product-sections py-5">
+    <div class="container">
+        <!-- TOP SELLER PRODUCTS -->
+        @if (Model.TopSellerProducts.Any())
+        {
+            <div class="product-section mb-5">
+                <div class="section-header">
+                    <div class="section-title"><i class="bi bi-lightning"></i> LAPTOP BÁN CHẠY</div>
+                    <a asp-controller="Product" asp-action="Index" asp-route-sortOrder="popular" class="view-all-btn">
+                        Xem tất cả <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="products-grid">
+                    @foreach (var product in Model.TopSellerProducts.Take(8))
+                    {
+                        <div class="product-card-wrapper">
+                            <div class="product-card">
+                                <div class="product-image-container">
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.MaSanPham" class="product-image-link">
+                                        @{
+                                            var imgUrl = Url.Content("/images/products/" + (product.HinhAnhs?.FirstOrDefault(h => h.IsDefault)?.Url ?? product.HinhAnhs?.FirstOrDefault()?.Url ?? "no-image.png"));
+                                        }
+                                        <img src="@imgUrl" alt="@product.TenSanPham" class="product-image" onerror="this.src='/images/products/no-image.png'" />
+                                    </a>
+
+                                    @if (product.PhanTramGiamGia > 0)
+                                    {
+                                        <span class="product-badge-discount">-@product.PhanTramGiamGia%</span>
+                                    }
+                                    <span class="product-badge-new">MỚI</span>
+
+                                    <button type="button" class="product-add-btn" onclick="addToCartAjax(@product.MaSanPham, '@product.TenSanPham')">
+                                        <i class="bi bi-cart-plus"></i> Thêm Giỏ
+                                    </button>
+                                </div>
+
+                                <div class="product-info">
+                                    <h5 class="product-name">
+                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.MaSanPham">
+                                            @product.TenSanPham
+                                        </a>
+                                    </h5>
+
+                                    <!-- Rating -->
+                                    <div class="product-rating">
+                                        <div class="rating-stars">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                        </div>
+                                        <span class="rating-count">Đã bán 234</span>
+                                    </div>
+
+                                    <div class="product-price-group">
+                                        @if (product.GiaNiemYet.HasValue && product.GiaNiemYet > product.Gia)
+                                        {
+                                            <span class="product-price-old">@product.GiaNiemYet.Value.ToString("#,##0")₫</span>
+                                        }
+                                        <span class="product-price-current">@product.Gia.ToString("#,##0")₫</span>
+                                    </div>
+
+                                    <!-- Installment button -->
+                                    <button type="button" class="btn-installment">
+                                        <i class="bi bi-percent"></i> Trả góp 0%
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
         }
 
-    .text-truncate-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-</style>
+        <!-- NEW ARRIVALS -->
+        @if (Model.NewProducts.Any())
+        {
+            <div class="product-section">
+                <div class="section-header">
+                    <div class="section-title"><i class="bi bi-star-fill"></i> LINH KIỆN MỚI VỀ</div>
+                    <a asp-controller="Product" asp-action="Index" asp-route-sortOrder="newest" class="view-all-btn">
+                        Xem tất cả <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="products-grid">
+                    @foreach (var product in Model.NewProducts.Take(8))
+                    {
+                        <div class="product-card-wrapper">
+                            <div class="product-card">
+                                <div class="product-image-container">
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.MaSanPham" class="product-image-link">
+                                        @{
+                                            var imgUrl = Url.Content("/images/products/" + (product.HinhAnhs?.FirstOrDefault(h => h.IsDefault)?.Url ?? product.HinhAnhs?.FirstOrDefault()?.Url ?? "no-image.png"));
+                                        }
+                                        <img src="@imgUrl" alt="@product.TenSanPham" class="product-image" onerror="this.src='/images/products/no-image.png'" />
+                                    </a>
+
+                                    @if (product.PhanTramGiamGia > 0)
+                                    {
+                                        <span class="product-badge-discount">-@product.PhanTramGiamGia%</span>
+                                    }
+                                    <span class="product-badge-new">MỚI</span>
+
+                                    <button type="button" class="product-add-btn" onclick="addToCartAjax(@product.MaSanPham, '@product.TenSanPham')">
+                                        <i class="bi bi-cart-plus"></i> Thêm Giỏ
+                                    </button>
+                                </div>
+
+                                <div class="product-info">
+                                    <h5 class="product-name">
+                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.MaSanPham">
+                                            @product.TenSanPham
+                                        </a>
+                                    </h5>
+
+                                    <!-- Rating -->
+                                    <div class="product-rating">
+                                        <div class="rating-stars">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                        </div>
+                                        <span class="rating-count">Đã bán 234</span>
+                                    </div>
+
+                                    <div class="product-price-group">
+                                        @if (product.GiaNiemYet.HasValue && product.GiaNiemYet > product.Gia)
+                                        {
+                                            <span class="product-price-old">@product.GiaNiemYet.Value.ToString("#,##0")₫</span>
+                                        }
+                                        <span class="product-price-current">@product.Gia.ToString("#,##0")₫</span>
+                                    </div>
+
+                                    <!-- Installment button -->
+                                    <button type="button" class="btn-installment">
+                                        <i class="bi bi-percent"></i> Trả góp 0%
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</section>
+@section Scripts {
+    <script src="~/js/pages/home.js"></script>
+}
+
+@* Cart functionality is now in global wwwroot/js/cart.js *@

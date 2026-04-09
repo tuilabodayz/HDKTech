@@ -1,0 +1,13 @@
+## Visual Studio
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+
+## File tạm hệ thống
+.DS_Store
+Thumbs.db
+

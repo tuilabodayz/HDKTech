@@ -1,26 +1,85 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using HDKTech.Models;
+using HDKTech.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HDKTech.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ProductRepository _productRepo;
+        private readonly CategoryRepository _categoryRepo;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ProductRepository productRepo, CategoryRepository categoryRepo)
         {
             _logger = logger;
+            _productRepo = productRepo;
+            _categoryRepo = categoryRepo;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var danhSachSanPham = await _productRepo.GetAllWithImagesAsync();
+            var categories = await _categoryRepo.GetAllAsync();
+
+            // Tạo ViewModel chứa các section khác nhau
+            var viewModel = new HomeIndexViewModel
+            {
+                // Flash Sale: 5 sản phẩm có discount cao nhất
+                FlashSaleProducts = danhSachSanPham
+                    .Where(p => p.PhanTramGiamGia > 0)
+                    .OrderByDescending(p => p.PhanTramGiamGia)
+                    .Take(5)
+                    .ToList(),
+
+                // Laptop bán chạy: Lọc từ danh mục Laptop (MaDanhMuc = 1) hoặc theo logic khác
+                TopSellerProducts = danhSachSanPham
+                    .OrderByDescending(p => p.MaSanPham)
+                    .Take(8)
+                    .ToList(),
+
+                // Linh kiện mới về: Sắp xếp theo thời gian tạo
+                NewProducts = danhSachSanPham
+                    .OrderByDescending(p => p.ThoiGianTaoSP)
+                    .Take(6)
+                    .ToList(),
+
+                // Tất cả sản phẩm cho hero slider
+                AllProducts = danhSachSanPham.ToList(),
+
+                // Danh mục chính (lấy danh mục không có cha - root categories)
+                Categories = categories
+                    .Where(c => c.MaDanhMucCha == null)
+                    .OrderBy(c => c.MaDanhMuc)
+                    .ToList()
+            };
+
+            return View(viewModel);
         }
 
-        public IActionResult Privacy()
+        public IActionResult Privacy() => View();
+
+        public async Task<IActionResult> Diagnostic()
         {
-            return View();
+            var allCategories = await _categoryRepo.GetAllAsync();
+            var allProducts = await _productRepo.GetAllWithImagesAsync();
+
+            var categoriesWithCount = allCategories.Select(c => new
+            {
+                c.MaDanhMuc,
+                c.TenDanhMuc,
+                c.MaDanhMucCha,
+                ProductCount = allProducts.Count(p => p.MaDanhMuc == c.MaDanhMuc)
+            }).ToList();
+
+            ViewBag.Categories = categoriesWithCount;
+            ViewBag.Products = allProducts.Take(20).ToList();
+            ViewBag.TotalCategories = allCategories.Count;
+            ViewBag.TotalProducts = allProducts.Count;
+            ViewBag.EmptyCategories = categoriesWithCount.Count(c => c.ProductCount == 0);
+
+            return View("~/Views/Shared/Diagnostic.cshtml");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -28,13 +87,9 @@ namespace HDKTech.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        public IActionResult About()
-        {
-            return View();
-        }
-        public IActionResult Hotline()
-        {
-            return View();
-        }
+
+        public IActionResult About() => View();
+
+        public IActionResult Hotline() => View();
     }
 }
